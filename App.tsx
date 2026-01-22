@@ -6,11 +6,14 @@ import {
 } from "@react-navigation/native-stack";
 import LoginScreen from "./features/login/presentation/screens/LoginScreen";
 import HomeScreen from "./features/home/presentation/screens/HomeScreen";
+import { UserDTO } from "./features/login/domain/dtos/UserDTO";
 
 // NOTE: Define the types for routes
 export type RootStackParamList = {
   Login: undefined;
-  Home: undefined;
+  Home: {
+    user: UserDTO;
+  };
 };
 
 export type MyNavigationProp = NativeStackNavigationProp<RootStackParamList>;

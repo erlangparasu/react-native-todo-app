@@ -11,6 +11,10 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { MyNavigationProp } from "../../../../App";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { LoginOrRegisterUsecase } from "../../domain/usecases/LoginUsecase";
+import { UserRepositoryImpl } from "../../data/repositories/UserRepositoryImpl";
+import { UserLocalDatasource } from "../../data/data-sources/UserLocalDatasource";
+import { useRef } from "react";
 
 export const LoginValidationSchema = Yup.object().shape({
   userName: Yup.string()
@@ -19,6 +23,14 @@ export const LoginValidationSchema = Yup.object().shape({
 
 const LoginScreen = () => {
   const navigation = useNavigation<MyNavigationProp>();
+
+  const loginUsecase = useRef<LoginOrRegisterUsecase>(
+    new LoginOrRegisterUsecase(
+      new UserRepositoryImpl(
+        new UserLocalDatasource(),
+      ),
+    ),
+  );
 
   return (
     <SafeAreaProvider>
@@ -30,10 +42,17 @@ const LoginScreen = () => {
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
             console.log({ values });
-            if (false) {
-              values.userName;
-              navigation.navigate("Home");
-            }
+
+            loginUsecase.current.execute({
+              userName: values.userName,
+            })
+              .then((data) => {
+                navigation.navigate("Home", {
+                  user: { ...data },
+                });
+              }).catch((error) => {
+                console.log("catch:", { error });
+              });
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors }) => (

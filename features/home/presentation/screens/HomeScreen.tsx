@@ -171,7 +171,17 @@ const HomeScreen = () => {
             <FlatList
               data={todoRecords}
               keyExtractor={(item) => item.id.toString()}
-              ListEmptyComponent={<Text>No Item found.</Text>}
+              ListEmptyComponent={
+                <Text
+                  style={{
+                    color: "white",
+                    padding: 32,
+                    fontSize: 18,
+                  }}
+                >
+                  {"No Item found. Click on plus button to add item."}
+                </Text>
+              }
               renderItem={renderItem}
               // contentContainerStyle={}
             />

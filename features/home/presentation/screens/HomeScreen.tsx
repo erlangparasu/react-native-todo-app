@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import MaterialIcons from "@react-native-vector-icons/material-icons";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import {
   Modal,
@@ -11,9 +12,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { RootStackParamList } from "../../../../App";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const route = useRoute<RouteProp<RootStackParamList, "Home">>();
+  const { user } = route.params;
 
   return (
     <SafeAreaProvider>
@@ -49,7 +54,7 @@ const HomeScreen = () => {
                 }}
               >
                 {"Hi, "}
-                {"Erlang Parasu"}
+                {user.name}
               </Text>
             </View>
           </View>

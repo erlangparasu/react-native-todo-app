@@ -1,45 +1,26 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./features/login/presentation/screens/LoginScreen";
+import HomeScreen from "./features/home/presentation/screens/HomeScreen";
 
-import { NewAppScreen } from "@react-native/new-app-screen";
-import { StatusBar, StyleSheet, useColorScheme, View } from "react-native";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+// NOTE: Define the types for routes
+type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
-  const isDarkMode = useColorScheme() === "dark";
-
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <AppContent />
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import MaterialIcons from "@react-native-vector-icons/material-icons";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
@@ -113,6 +120,7 @@ const HomeScreen = () => {
             />
           </ScrollView>
 
+          {/* Add Button */}
           <View
             style={{
               position: "absolute",
@@ -126,6 +134,15 @@ const HomeScreen = () => {
               }}
             />
           </View>
+
+          {/* Add Modal */}
+          <AddTodoModal
+            visible={false}
+            onCancelPress={() => {}}
+            onSavePress={(params) => {
+              console.log({ params });
+            }}
+          />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -378,5 +395,85 @@ export function AddButton(props: {
         />
       </View>
     </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    width: "80%",
+    padding: 32,
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+});
+
+export function AddTodoModal(props: {
+  visible: boolean;
+  onSavePress: (params: {
+    title: string;
+    dueData: string;
+  }) => void;
+  onCancelPress: () => void;
+}) {
+  return (
+    <Modal
+      visible={props.visible}
+      backdropColor={"#ffffff00"}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View
+          style={[
+            styles.modalView,
+            {
+              flex: 1,
+              maxWidth: "80%",
+              maxHeight: "70%",
+              backgroundColor: "rgb(55,57,64)",
+              borderWidth: 0,
+              borderRadius: 8,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 0,
+            }}
+            onPress={props.onCancelPress}
+          >
+            <View
+              style={{
+                backgroundColor: "rgb(57,195,108)",
+                borderWidth: 0,
+                borderRadius: 100,
+                padding: 8,
+                width: "auto",
+              }}
+            >
+              <MaterialIcons
+                name="add"
+                color="#ffffff"
+                size={16 * 3}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   );
 }

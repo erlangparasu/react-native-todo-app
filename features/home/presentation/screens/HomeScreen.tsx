@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  FlatList,
   Modal,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -13,12 +13,113 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../../../../App";
+import { AddTodoUsecase } from "../../domain/usecases/AddTodoUsecase";
+import { TodoRepositoryImpl } from "../../data/repositories/TodoRepositoryImpl";
+import { TodoLocalDatasource } from "../../data/data-sources/TodoLocalDatasource";
+import { DeleteTodoUsecase } from "../../domain/usecases/DeleteTodoUsecase";
+import { DoneTodoUsecase } from "../../domain/usecases/DoneTodoUsecase";
+import { GetTodoListUsecase } from "../../domain/usecases/GetTodoListUsecase";
+import { TodoDTO } from "../../domain/dtos/TodoDTO";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const route = useRoute<RouteProp<RootStackParamList, "Home">>();
-  const { user } = route.params;
+  const { user: sessionUser } = route.params;
+
+  const addTodoUsecase = useRef<AddTodoUsecase>(
+    new AddTodoUsecase(
+      new TodoRepositoryImpl(
+        new TodoLocalDatasource(),
+      ),
+    ),
+  );
+
+  const deleteTodoUsecase = useRef<DeleteTodoUsecase>(
+    new DeleteTodoUsecase(
+      new TodoRepositoryImpl(
+        new TodoLocalDatasource(),
+      ),
+    ),
+  );
+
+  const doneTodoUsecase = useRef<DoneTodoUsecase>(
+    new DoneTodoUsecase(
+      new TodoRepositoryImpl(
+        new TodoLocalDatasource(),
+      ),
+    ),
+  );
+
+  const getTodoListUsecase = useRef<GetTodoListUsecase>(
+    new GetTodoListUsecase(
+      new TodoRepositoryImpl(
+        new TodoLocalDatasource(),
+      ),
+    ),
+  );
+
+  const [todoRecords, setTodoRecords] = useState<TodoDTO[]>([]);
+
+  const performReload = useCallback(() => {
+    setTodoRecords([]);
+    getTodoListUsecase.current.execute({
+      userId: sessionUser.id,
+    }).then((data) => {
+      console.log("ok:", { data });
+      setTodoRecords(data);
+    }).catch((error) => {
+      console.log("catch:", { error });
+      setTodoRecords([]);
+    });
+  }, [sessionUser]);
+
+  useEffect(() => {
+    performReload();
+  }, [performReload, sessionUser]);
+
+  const renderItem = ({ item }: { item: TodoDTO }) => (
+    <TodoOneCard
+      id={item.id}
+      status={(() => {
+        if (item.status === "open") {
+          return "open";
+        }
+        if (item.status === "done") {
+          return "done";
+        }
+        if (item.status === "deleted") {
+          return "overdue";
+        }
+        return "open";
+      })()}
+      title={item.content}
+      dueDate={item.dueDate}
+      onDeletePress={(_) => {
+        deleteTodoUsecase.current.execute({
+          forceDelete: true,
+          todoId: item.id,
+          userId: sessionUser.id,
+        }).then((data) => {
+          console.log("ok:", { data });
+          performReload();
+        }).catch((error) => {
+          console.log("catch:", { error });
+        });
+      }}
+      onDonePress={(_) => {
+        doneTodoUsecase.current.execute({
+          userId: sessionUser.id,
+          todoId: item.id,
+        }).then((data) => {
+          console.log("ok:", { data });
+          performReload();
+        }).catch((error) => {
+          console.log("catch:", { error });
+        });
+      }}
+    />
+  );
 
   return (
     <SafeAreaProvider>
@@ -54,80 +155,27 @@ const HomeScreen = () => {
                 }}
               >
                 {"Hi, "}
-                {user.name}
+                {sessionUser.name}
               </Text>
             </View>
           </View>
-          <ScrollView
+          <View
             style={{
               backgroundColor: "rgb(55, 57, 64)",
               borderWidth: 0,
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
+              flex: 1,
             }}
           >
-            <TodoOneCard
-              id={1}
-              status="open"
-              title="Dummy1"
-              dueDate="2026-01-23"
-              onDeletePress={(_) => {
-                //
-              }}
-              onDonePress={(_) => {
-                //
-              }}
+            <FlatList
+              data={todoRecords}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={<Text>No Item found.</Text>}
+              renderItem={renderItem}
+              // contentContainerStyle={}
             />
-            <TodoOneCard
-              id={2}
-              status="done"
-              title="Dummy2"
-              dueDate="2026-01-23"
-              onDeletePress={(_) => {
-                //
-              }}
-              onDonePress={(_) => {
-                //
-              }}
-            />
-            <TodoOneCard
-              id={3}
-              status="overdue"
-              title="Dummy3"
-              dueDate="2026-01-23"
-              onDeletePress={(_) => {
-                //
-              }}
-              onDonePress={(_) => {
-                //
-              }}
-            />
-
-            <TodoOneCard
-              id={3}
-              status="overdue"
-              title="Dummy3"
-              dueDate="2026-01-23"
-              onDeletePress={(_) => {
-                //
-              }}
-              onDonePress={(_) => {
-                //
-              }}
-            />
-            <TodoOneCard
-              id={3}
-              status="overdue"
-              title="Dummy3"
-              dueDate="2026-01-23"
-              onDeletePress={(_) => {
-                //
-              }}
-              onDonePress={(_) => {
-                //
-              }}
-            />
-          </ScrollView>
+          </View>
 
           {/* Add Button */}
           <View
@@ -153,6 +201,17 @@ const HomeScreen = () => {
             onSavePress={(params) => {
               console.log({ params });
               setModalVisible(false);
+
+              addTodoUsecase.current.execute({
+                content: params.title,
+                dueDate: params.dueData,
+                userId: sessionUser.id,
+              }).then((data) => {
+                console.log("ok:", { data });
+                performReload();
+              }).catch((error) => {
+                console.log("catch:", { error });
+              });
             }}
           />
         </View>

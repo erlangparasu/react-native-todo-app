@@ -94,24 +94,47 @@ const HomeScreen = () => {
                 {"TitleHere"}
               </Text>
 
-              <Text
+              <View
                 style={{
-                  color: "white",
-                  fontSize: 16,
-                  marginTop: 16,
+                  flexDirection: "row",
                 }}
               >
-                {"Due Date:"}
-              </Text>
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                {"DateHere"}
-              </Text>
+                <View
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 16,
+                      marginTop: 16,
+                    }}
+                  >
+                    {"Due Date:"}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {"DateHere"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <DoneButton
+                    onPress={() => {
+                      //
+                    }}
+                  />
+                </View>
+              </View>
             </View>
 
             <View
@@ -129,7 +152,7 @@ const HomeScreen = () => {
                 }}
               >
                 {"Hi, "}
-                {"fff"}
+                {"Erlang Parasu"}
               </Text>
             </View>
           </ScrollView>
@@ -213,15 +236,41 @@ export function DeleteButton(props: {
           backgroundColor: "rgb(55,57,63)",
           borderWidth: 0,
           borderRadius: 6,
-          padding: 6,
+          padding: 8,
         }}
       >
         <MaterialIcons
           name="delete"
           color="#ffffff"
-          size={24}
+          size={20}
         />
       </View>
+    </TouchableOpacity>
+  );
+}
+
+export function DoneButton(props: {
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}
+    >
+      <Text
+        style={{
+          color: "#ffffff",
+          fontSize: 14,
+          fontWeight: "bold",
+          backgroundColor: "rgb(101, 74, 251)",
+          borderWidth: 0,
+          borderRadius: 8,
+          paddingVertical: 12,
+          paddingHorizontal: 24,
+          alignSelf: "flex-start",
+        }}
+      >
+        {"DONE"}
+      </Text>
     </TouchableOpacity>
   );
 }

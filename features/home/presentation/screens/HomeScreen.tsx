@@ -569,30 +569,139 @@ export function AddTodoModal(props: {
             </View>
           </View>
 
-          <TouchableOpacity
+          <View
             style={{
-              flex: 0,
+              height: 8,
+              flexDirection: "row",
             }}
-            onPress={props.onCancelPress}
+          />
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+            }}
+          />
+
+          <View
+            style={{
+              height: 8,
+              flexDirection: "row",
+            }}
+          />
+
+          {/* Save */}
+          <View
+            style={{
+              flexDirection: "row",
+            }}
           >
-            <View
-              style={{
-                backgroundColor: "rgb(57,195,108)",
-                borderWidth: 0,
-                borderRadius: 100,
-                padding: 8,
-                width: "auto",
+            <SaveButton
+              onPress={() => {
+                props.onSavePress({
+                  title: "DummyTitle",
+                  dueData: "dummy-due",
+                });
               }}
-            >
-              <MaterialIcons
-                name="add"
-                color="#ffffff"
-                size={16 * 3}
-              />
-            </View>
-          </TouchableOpacity>
+            />
+          </View>
+
+          <View
+            style={{
+              height: 8 + 4,
+              flexDirection: "row",
+            }}
+          />
+
+          {/* Cancel */}
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <CancelButton
+              onPress={() => {
+                props.onCancelPress();
+              }}
+            />
+          </View>
         </View>
       </View>
     </Modal>
+  );
+}
+
+export function SaveButton(props: {
+  onPress: () => void;
+}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "row",
+      }}
+    >
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+        }}
+      >
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "center",
+            color: "#ffffff",
+            fontSize: 14,
+            fontWeight: "bold",
+            backgroundColor: "rgb(101, 74, 251)",
+            borderWidth: 0,
+            borderRadius: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+          }}
+        >
+          {"SAVE"}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+export function CancelButton(props: {
+  onPress: () => void;
+}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "row",
+      }}
+    >
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+        }}
+      >
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "center",
+            color: "#ffffff",
+            fontSize: 14,
+            fontWeight: "bold",
+            borderWidth: 0,
+            borderRadius: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+          }}
+        >
+          {"CANCEL"}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }

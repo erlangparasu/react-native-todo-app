@@ -69,7 +69,7 @@ const HomeScreen = () => {
       userId: sessionUser.id,
     }).then((data) => {
       console.log("ok:", { data });
-      setTodoRecords(data);
+      setTodoRecords([...data]);
     }).catch((error) => {
       console.log("catch:", { error });
       setTodoRecords([]);
@@ -82,6 +82,7 @@ const HomeScreen = () => {
 
   const renderItem = ({ item }: { item: TodoDTO }) => (
     <TodoOneCard
+      key={"key.todo." + item.id}
       id={item.id}
       status={(() => {
         if (item.status === "open") {
@@ -97,10 +98,10 @@ const HomeScreen = () => {
       })()}
       title={item.content}
       dueDate={item.dueDate}
-      onDeletePress={(_) => {
+      onDeletePress={(todoId) => {
         deleteTodoUsecase.current.execute({
           forceDelete: false,
-          todoId: item.id,
+          todoId: todoId,
           userId: sessionUser.id,
         }).then((data) => {
           console.log("ok:", { data });
@@ -109,10 +110,10 @@ const HomeScreen = () => {
           console.log("catch:", { error });
         });
       }}
-      onDonePress={(_) => {
+      onDonePress={(todoId) => {
         doneTodoUsecase.current.execute({
           userId: sessionUser.id,
-          todoId: item.id,
+          todoId: todoId,
         }).then((data) => {
           console.log("ok:", { data });
           performReload();
@@ -172,7 +173,7 @@ const HomeScreen = () => {
           >
             <FlatList
               data={todoRecords}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => "extract." + item.id.toString()}
               ListEmptyComponent={
                 <Text
                   style={{

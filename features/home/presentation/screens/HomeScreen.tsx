@@ -86,7 +86,46 @@ const HomeScreen = () => {
                 //
               }}
             />
+
+            <TodoOneCard
+              id={3}
+              status="overdue"
+              title="Dummy3"
+              dueDate="2026-01-23"
+              onDeletePress={(_) => {
+                //
+              }}
+              onDonePress={(_) => {
+                //
+              }}
+            />
+            <TodoOneCard
+              id={3}
+              status="overdue"
+              title="Dummy3"
+              dueDate="2026-01-23"
+              onDeletePress={(_) => {
+                //
+              }}
+              onDonePress={(_) => {
+                //
+              }}
+            />
           </ScrollView>
+
+          <View
+            style={{
+              position: "absolute",
+              bottom: 16,
+              right: 16,
+            }}
+          >
+            <AddButton
+              onPress={() => {
+                //
+              }}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -309,6 +348,35 @@ export function DoneButton(props: {
       >
         {"DONE"}
       </Text>
+    </TouchableOpacity>
+  );
+}
+
+export function AddButton(props: {
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      style={{
+        flex: 0,
+      }}
+      onPress={props.onPress}
+    >
+      <View
+        style={{
+          backgroundColor: "rgb(57,195,108)",
+          borderWidth: 0,
+          borderRadius: 100,
+          padding: 8,
+          width: "auto",
+        }}
+      >
+        <MaterialIcons
+          name="add"
+          color="#ffffff"
+          size={16 * 3}
+        />
+      </View>
     </TouchableOpacity>
   );
 }

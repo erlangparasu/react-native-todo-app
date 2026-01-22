@@ -86,11 +86,31 @@ const HomeScreen = () => {
               <Text
                 style={{
                   color: "white",
-                  fontSize: 4 * 9,
+                  fontSize: 28,
                   fontWeight: "bold",
+                  marginTop: 12,
                 }}
               >
                 {"TitleHere"}
+              </Text>
+
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 16,
+                  marginTop: 16,
+                }}
+              >
+                {"Due Date:"}
+              </Text>
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {"DateHere"}
               </Text>
             </View>
 

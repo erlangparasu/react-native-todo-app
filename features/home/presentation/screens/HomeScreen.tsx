@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -63,7 +63,7 @@ const HomeScreen = () => {
 
   const [todoRecords, setTodoRecords] = useState<TodoDTO[]>([]);
 
-  const performReload = useCallback(() => {
+  const performReload = () => {
     setTodoRecords([]);
     getTodoListUsecase.current.execute({
       userId: sessionUser.id,
@@ -74,11 +74,12 @@ const HomeScreen = () => {
       console.log("catch:", { error });
       setTodoRecords([]);
     });
-  }, [sessionUser]);
+  };
 
   useEffect(() => {
     performReload();
-  }, [performReload, sessionUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionUser]);
 
   const renderItem = ({ item }: { item: TodoDTO }) => (
     <TodoOneCard

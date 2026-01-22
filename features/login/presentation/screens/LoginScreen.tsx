@@ -37,26 +37,11 @@ const LoginScreen = () => {
             <View
               style={styles.buttonContainer}
             >
-              <TouchableOpacity
+              <NextButton
                 onPress={() => {
                   //
                 }}
-              >
-                <View
-                  style={styles.buttonWrapper}
-                >
-                  <Text
-                    style={styles.buttonText}
-                  >
-                    {"Next"}
-                  </Text>
-                  <MaterialIcons
-                    name="chevron-right"
-                    color="#ffffff"
-                    size={24 + 8}
-                  />
-                </View>
-              </TouchableOpacity>
+              />
             </View>
           </View>
         </View>
@@ -126,3 +111,28 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 });
+
+export function NextButton(props: {
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}
+    >
+      <View
+        style={styles.buttonWrapper}
+      >
+        <Text
+          style={styles.buttonText}
+        >
+          {"Next"}
+        </Text>
+        <MaterialIcons
+          name="chevron-right"
+          color="#ffffff"
+          size={24 + 8}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+}

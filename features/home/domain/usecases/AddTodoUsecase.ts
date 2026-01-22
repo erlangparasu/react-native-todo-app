@@ -10,7 +10,7 @@ export class AddTodoUsecase {
         userId: number;
         content: string;
         dueDate: string;
-    }) {
+    }): Promise<TodoDTO> {
         const todos = await this.todoRepository.localGetAll();
 
         const maxId = todos.reduce((max, todo) => {

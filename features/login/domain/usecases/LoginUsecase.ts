@@ -6,7 +6,9 @@ export class LoginOrRegisterUsecase {
     private userRepository: UserRepository,
   ) {}
 
-  async execute(params: { userName: string }): Promise<UserDTO> {
+  async execute(params: {
+    userName: string;
+  }): Promise<UserDTO> {
     const users = await this.userRepository.localGetAll();
 
     const user = users.find((record) => {

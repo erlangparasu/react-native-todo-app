@@ -1,3 +1,4 @@
+import { TodoDTO } from "../dtos/TodoDTO";
 import { TodoRepository } from "../repositories/TodoRepository";
 
 export class GetTodoListUsecase {
@@ -7,7 +8,7 @@ export class GetTodoListUsecase {
 
     async execute(params: {
         userId: number;
-    }) {
+    }): Promise<TodoDTO[]> {
         const todos = await this.todoRepository.localGetAll();
 
         const userTodos = todos.filter((rec) => {

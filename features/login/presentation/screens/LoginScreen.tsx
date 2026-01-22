@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { MyNavigationProp } from "../../../../App";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const LoginScreen = () => {
   const navigation = useNavigation<MyNavigationProp>();
@@ -18,37 +20,53 @@ const LoginScreen = () => {
       <SafeAreaView
         style={styles.wrapper}
       >
-        <View
-          style={styles.container}
+        <Formik
+          initialValues={{ userName: "" }}
+          onSubmit={(values) => {
+            console.log({ values });
+            if (false) {
+              values.userName;
+              navigation.navigate("Home");
+            }
+          }}
         >
-          <View
-            style={styles.box}
-          >
-            <Text
-              style={styles.labelName}
-            >
-              {"Name"}
-            </Text>
-
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
             <View
-              style={styles.textInputWrapper}
+              style={styles.container}
             >
-              <TextInput
-                style={styles.textInput}
-              />
-            </View>
+              <View
+                style={styles.box}
+              >
+                <Text
+                  style={styles.labelName}
+                >
+                  {"Name"}
+                </Text>
 
-            <View
-              style={styles.buttonContainer}
-            >
-              <NextButton
-                onPress={() => {
-                  navigation.navigate("Home");
-                }}
-              />
+                <View
+                  style={styles.textInputWrapper}
+                >
+                  <TextInput
+                    style={styles.textInput}
+                    onChangeText={handleChange("userName")}
+                    onBlur={handleBlur("userName")}
+                    value={values.userName}
+                  />
+                </View>
+
+                <View
+                  style={styles.buttonContainer}
+                >
+                  <NextButton
+                    onPress={() => {
+                      handleSubmit();
+                    }}
+                  />
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
+          )}
+        </Formik>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -140,3 +158,13 @@ export function NextButton(props: {
     </TouchableOpacity>
   );
 }
+
+// 1. Define Validation Schema with Yup
+export const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Required"),
+  password: Yup.string()
+    .min(6, "Too short!")
+    .required("Required"),
+});

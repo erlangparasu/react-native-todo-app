@@ -14,7 +14,7 @@ import * as Yup from "yup";
 
 export const LoginValidationSchema = Yup.object().shape({
   userName: Yup.string()
-    .required("Required"),
+    .required("Please input name to continue"),
 });
 
 const LoginScreen = () => {
@@ -36,7 +36,7 @@ const LoginScreen = () => {
             }
           }}
         >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <View
               style={styles.container}
             >
@@ -69,6 +69,24 @@ const LoginScreen = () => {
                     }}
                   />
                 </View>
+
+                {(() => {
+                  if (errors) {
+                    return (
+                      <Text
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        style={{
+                          marginLeft: 2,
+                          marginTop: 16 + 8,
+                          color: "white",
+                        }}
+                      >
+                        {errors.userName}
+                      </Text>
+                    );
+                  }
+                  return <></>;
+                })()}
               </View>
             </View>
           )}

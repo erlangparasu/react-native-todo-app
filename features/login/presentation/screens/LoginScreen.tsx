@@ -12,6 +12,11 @@ import { MyNavigationProp } from "../../../../App";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
+export const LoginValidationSchema = Yup.object().shape({
+  userName: Yup.string()
+    .required("Required"),
+});
+
 const LoginScreen = () => {
   const navigation = useNavigation<MyNavigationProp>();
 
@@ -22,6 +27,7 @@ const LoginScreen = () => {
       >
         <Formik
           initialValues={{ userName: "" }}
+          validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
             console.log({ values });
             if (false) {
@@ -158,13 +164,3 @@ export function NextButton(props: {
     </TouchableOpacity>
   );
 }
-
-// 1. Define Validation Schema with Yup
-export const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Required"),
-  password: Yup.string()
-    .min(6, "Too short!")
-    .required("Required"),
-});

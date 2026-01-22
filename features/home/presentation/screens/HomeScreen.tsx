@@ -1,16 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import MaterialIcons from "@react-native-vector-icons/material-icons";
+import { useState } from "react";
 import {
   Modal,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -130,17 +134,20 @@ const HomeScreen = () => {
           >
             <AddButton
               onPress={() => {
-                //
+                setModalVisible(true);
               }}
             />
           </View>
 
           {/* Add Modal */}
           <AddTodoModal
-            visible={false}
-            onCancelPress={() => {}}
+            visible={modalVisible}
+            onCancelPress={() => {
+              setModalVisible(false);
+            }}
             onSavePress={(params) => {
               console.log({ params });
+              setModalVisible(false);
             }}
           />
         </View>
@@ -415,6 +422,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
+
+  box: {
+    flex: 1,
+    maxWidth: 300,
+    alignSelf: "center",
+    // backgroundColor: "red",
+  },
+  labelName: {
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  textInputWrapper: {
+    marginTop: 12,
+    backgroundColor: "rgb(63,68,76)",
+    fontWeight: "bold",
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    borderWidth: 0,
+    borderRadius: 8,
+  },
+  textInput: {
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
 
 export function AddTodoModal(props: {
@@ -450,6 +482,93 @@ export function AddTodoModal(props: {
             },
           ]}
         >
+          {/* Header */}
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              fontWeight: "bold",
+              alignSelf: "flex-start",
+              marginBottom: 16 + 16,
+            }}
+          >
+            {"New TODO"}
+          </Text>
+
+          {/* Title */}
+          <View
+            style={[
+              {
+                flexDirection: "row",
+              },
+            ]}
+          >
+            <View
+              style={[
+                {
+                  flex: 1,
+                  backgroundColor: "rgb(55,57,64)",
+                  borderWidth: 0,
+                  borderRadius: 8,
+                },
+              ]}
+            >
+              <Text
+                style={styles.labelName}
+              >
+                {"Title"}
+              </Text>
+              <View
+                style={styles.textInputWrapper}
+              >
+                <TextInput
+                  style={styles.textInput}
+                />
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={[
+              {
+                height: 16 + 8,
+              },
+            ]}
+          />
+
+          {/* Due Date */}
+          <View
+            style={[
+              {
+                flexDirection: "row",
+              },
+            ]}
+          >
+            <View
+              style={[
+                {
+                  flex: 1,
+                  backgroundColor: "rgb(55,57,64)",
+                  borderWidth: 0,
+                  borderRadius: 8,
+                },
+              ]}
+            >
+              <Text
+                style={styles.labelName}
+              >
+                {"Due Date"}
+              </Text>
+              <View
+                style={styles.textInputWrapper}
+              >
+                <TextInput
+                  style={styles.textInput}
+                />
+              </View>
+            </View>
+          </View>
+
           <TouchableOpacity
             style={{
               flex: 0,

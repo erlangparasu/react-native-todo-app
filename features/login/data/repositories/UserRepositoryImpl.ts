@@ -5,7 +5,7 @@ import { UserLocalDatasource } from "../data-sources/UserLocalDatasource";
 export class UserRepositoryImpl implements UserRepository {
   constructor(
     private userLocalDatasource: UserLocalDatasource,
-  ) { }
+  ) {}
 
   async localGetAll(): Promise<UserDTO[]> {
     const records = await this.userLocalDatasource.getList();

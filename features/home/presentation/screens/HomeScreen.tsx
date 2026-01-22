@@ -20,6 +20,8 @@ import { DeleteTodoUsecase } from "../../domain/usecases/DeleteTodoUsecase";
 import { DoneTodoUsecase } from "../../domain/usecases/DoneTodoUsecase";
 import { GetTodoListUsecase } from "../../domain/usecases/GetTodoListUsecase";
 import { TodoDTO } from "../../domain/dtos/TodoDTO";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -97,7 +99,7 @@ const HomeScreen = () => {
       dueDate={item.dueDate}
       onDeletePress={(_) => {
         deleteTodoUsecase.current.execute({
-          forceDelete: true,
+          forceDelete: false,
           todoId: item.id,
           userId: sessionUser.id,
         }).then((data) => {
@@ -523,6 +525,13 @@ const styles = StyleSheet.create({
   },
 });
 
+export const AddValidationSchema = Yup.object().shape({
+  title: Yup.string()
+    .required("Please input Title"),
+  dueDate: Yup.string()
+    .required("Please input Due Date"),
+});
+
 export function AddTodoModal(props: {
   visible: boolean;
   onSavePress: (params: {
@@ -542,165 +551,219 @@ export function AddTodoModal(props: {
         alignItems: "center",
       }}
     >
-      <View style={styles.centeredView}>
-        <View
-          style={[
-            styles.modalView,
-            {
-              flex: 1,
-              maxWidth: "80%",
-              maxHeight: "70%",
-              backgroundColor: "rgb(55,57,64)",
-              borderWidth: 0,
-              borderRadius: 8,
-            },
-          ]}
-        >
-          {/* Header */}
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              fontWeight: "bold",
-              alignSelf: "flex-start",
-              marginBottom: 16 + 16,
-            }}
-          >
-            {"New TODO"}
-          </Text>
+      <Formik
+        initialValues={{ title: "", dueDate: "" }}
+        validationSchema={AddValidationSchema}
+        onSubmit={(values) => {
+          console.log({ values });
 
-          {/* Title */}
-          <View
-            style={[
-              {
-                flexDirection: "row",
-              },
-            ]}
-          >
+          props.onSavePress({
+            title: values.title,
+            dueData: values.dueDate,
+          });
+        }}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          <View style={styles.centeredView}>
             <View
               style={[
+                styles.modalView,
                 {
                   flex: 1,
+                  maxWidth: "80%",
+                  maxHeight: "70%",
                   backgroundColor: "rgb(55,57,64)",
                   borderWidth: 0,
                   borderRadius: 8,
                 },
               ]}
             >
+              {/* Header */}
               <Text
-                style={styles.labelName}
+                style={{
+                  color: "white",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  alignSelf: "flex-start",
+                  marginBottom: 16 + 16,
+                }}
               >
-                {"Title"}
+                {"New TODO"}
               </Text>
+
+              {(() => {
+                if (errors.title) {
+                  return (
+                    <Text
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      style={{
+                        marginLeft: 2,
+                        marginTop: 16 + 8,
+                        color: "white",
+                      }}
+                    >
+                      {errors.title}
+                    </Text>
+                  );
+                }
+                return <></>;
+              })()}
+
+              {(() => {
+                if (errors.dueDate) {
+                  return (
+                    <Text
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      style={{
+                        marginLeft: 2,
+                        marginTop: 16 + 8,
+                        color: "white",
+                      }}
+                    >
+                      {errors.dueDate}
+                    </Text>
+                  );
+                }
+                return <></>;
+              })()}
+
+              {/* Title */}
               <View
-                style={styles.textInputWrapper}
+                style={[
+                  {
+                    flexDirection: "row",
+                  },
+                ]}
               >
-                <TextInput
-                  style={styles.textInput}
-                />
+                <View
+                  style={[
+                    {
+                      flex: 1,
+                      backgroundColor: "rgb(55,57,64)",
+                      borderWidth: 0,
+                      borderRadius: 8,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={styles.labelName}
+                  >
+                    {"Title"}
+                  </Text>
+                  <View
+                    style={styles.textInputWrapper}
+                  >
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={handleChange("title")}
+                      onBlur={handleBlur("title")}
+                      value={values.title}
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
 
-          <View
-            style={[
-              {
-                height: 16 + 8,
-              },
-            ]}
-          />
+              <View
+                style={[
+                  {
+                    height: 16 + 8,
+                  },
+                ]}
+              />
 
-          {/* Due Date */}
-          <View
-            style={[
-              {
-                flexDirection: "row",
-              },
-            ]}
-          >
-            <View
-              style={[
-                {
+              {/* Due Date */}
+              <View
+                style={[
+                  {
+                    flexDirection: "row",
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    {
+                      flex: 1,
+                      backgroundColor: "rgb(55,57,64)",
+                      borderWidth: 0,
+                      borderRadius: 8,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={styles.labelName}
+                  >
+                    {"Due Date"}
+                  </Text>
+                  <View
+                    style={styles.textInputWrapper}
+                  >
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={handleChange("dueDate")}
+                      onBlur={handleBlur("dueDate")}
+                      value={values.dueDate}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  height: 8,
+                  flexDirection: "row",
+                }}
+              />
+
+              <View
+                style={{
                   flex: 1,
-                  backgroundColor: "rgb(55,57,64)",
-                  borderWidth: 0,
-                  borderRadius: 8,
-                },
-              ]}
-            >
-              <Text
-                style={styles.labelName}
-              >
-                {"Due Date"}
-              </Text>
+                  flexDirection: "row",
+                }}
+              />
+
               <View
-                style={styles.textInputWrapper}
+                style={{
+                  height: 8,
+                  flexDirection: "row",
+                }}
+              />
+
+              {/* Save */}
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
               >
-                <TextInput
-                  style={styles.textInput}
+                <SaveButton
+                  onPress={() => {
+                    handleSubmit();
+                  }}
+                />
+              </View>
+
+              <View
+                style={{
+                  height: 8 + 4,
+                  flexDirection: "row",
+                }}
+              />
+
+              {/* Cancel */}
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <CancelButton
+                  onPress={() => {
+                    props.onCancelPress();
+                  }}
                 />
               </View>
             </View>
           </View>
-
-          <View
-            style={{
-              height: 8,
-              flexDirection: "row",
-            }}
-          />
-
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-            }}
-          />
-
-          <View
-            style={{
-              height: 8,
-              flexDirection: "row",
-            }}
-          />
-
-          {/* Save */}
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <SaveButton
-              onPress={() => {
-                props.onSavePress({
-                  title: "DummyTitle",
-                  dueData: "dummy-due",
-                });
-              }}
-            />
-          </View>
-
-          <View
-            style={{
-              height: 8 + 4,
-              flexDirection: "row",
-            }}
-          />
-
-          {/* Cancel */}
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <CancelButton
-              onPress={() => {
-                props.onCancelPress();
-              }}
-            />
-          </View>
-        </View>
-      </View>
+        )}
+      </Formik>
     </Modal>
   );
 }

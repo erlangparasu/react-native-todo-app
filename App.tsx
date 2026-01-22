@@ -1,14 +1,19 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
 import LoginScreen from "./features/login/presentation/screens/LoginScreen";
 import HomeScreen from "./features/home/presentation/screens/HomeScreen";
 
 // NOTE: Define the types for routes
-type RootStackParamList = {
+export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
 };
+
+export type MyNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

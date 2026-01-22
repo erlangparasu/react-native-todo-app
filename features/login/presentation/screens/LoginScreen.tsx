@@ -1,4 +1,5 @@
 import MaterialIcons from "@react-native-vector-icons/material-icons";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -7,8 +8,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { MyNavigationProp } from "../../../../App";
 
 const LoginScreen = () => {
+  const navigation = useNavigation<MyNavigationProp>();
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -39,7 +43,7 @@ const LoginScreen = () => {
             >
               <NextButton
                 onPress={() => {
-                  //
+                  navigation.navigate("Home");
                 }}
               />
             </View>

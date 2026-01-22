@@ -59,7 +59,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "rgb(55,	57,	64)",
+    backgroundColor: "rgb(55,57,64)",
   },
   container: {
     flex: 1,

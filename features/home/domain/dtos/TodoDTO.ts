@@ -4,13 +4,13 @@
 // ● User Todos are saved on local storage. Todo is saved by user name
 // ● Users can see their own Todo only
 export interface TodoDTO {
-    id: number;
-    content: string;
-    dueDate: string;
-    status: "open" | "done" | "deleted";
-    createdAt: string;
-    doneAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    userId: number;
+  id: number;
+  content: string;
+  dueDate: string;
+  status: "open" | "done" | "deleted";
+  createdAt: string;
+  doneAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  userId: number;
 }

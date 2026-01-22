@@ -3,13 +3,15 @@ import { TodoDTO } from "../../domain/dtos/TodoDTO";
 
 export class TodoLocalDatasource {
   async getList(): Promise<TodoDTO[]> {
-    try {
-      const raw = await AsyncStorage.getItem("todos");
-      if (raw) {
-        const records = JSON.parse(raw) as TodoDTO[];
-        console.log({ records });
+    console.log("getList:");
 
-        return records;
+    try {
+      const raw = await AsyncStorage.getItem("todos.v3");
+      if (raw) {
+        const parsed = JSON.parse(raw) as { recs: TodoDTO[] };
+        console.log({ parsed });
+
+        return parsed.recs;
       } else {
         return [];
       }
@@ -23,6 +25,8 @@ export class TodoLocalDatasource {
   async get(params: {
     todoId: number;
   }) {
+    console.log("get:", { params });
+
     const records = await this.getList();
 
     const found = records.find((record) => {
@@ -35,11 +39,19 @@ export class TodoLocalDatasource {
   async add(params: {
     todoItem: TodoDTO;
   }) {
-    try {
-      const records = await this.getList();
-      records.push({ ...params.todoItem });
+    console.log("add:", { params });
 
-      await AsyncStorage.setItem("todos", JSON.stringify(records));
+    try {
+      const oldRecords = await this.getList();
+      const newRecords = oldRecords.map((item) => {
+        return { ...item };
+      });
+      newRecords.push({ ...params.todoItem });
+
+      await AsyncStorage.setItem(
+        "todos.v3",
+        JSON.stringify({ recs: newRecords }),
+      );
     } catch (error) {
       console.log("catch:", { error });
 
@@ -50,14 +62,21 @@ export class TodoLocalDatasource {
   async update(params: {
     todoItem: TodoDTO;
   }) {
+    console.log("update:", { params });
+
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
         record.id !== params.todoItem.id;
+      }).map((item) => {
+        return { ...item };
       });
 
       newRecords.push({ ...params.todoItem });
-      await AsyncStorage.setItem("todos", JSON.stringify(newRecords));
+      await AsyncStorage.setItem(
+        "todos.v3",
+        JSON.stringify({ recs: newRecords }),
+      );
     } catch (error) {
       console.log("catch:", { error });
 
@@ -68,13 +87,21 @@ export class TodoLocalDatasource {
   async delete(params: {
     todoId: number;
   }) {
+    console.log("delete:", { params });
+
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
         record.id !== params.todoId;
-      });
+      })
+        .map((item) => {
+          return { ...item };
+        });
 
-      await AsyncStorage.setItem("todos", JSON.stringify(newRecords));
+      await AsyncStorage.setItem(
+        "todos.v3",
+        JSON.stringify({ recs: newRecords }),
+      );
     } catch (error) {
       console.log("catch:", { error });
 

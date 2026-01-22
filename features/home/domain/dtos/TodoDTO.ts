@@ -9,8 +9,8 @@ export interface TodoDTO {
   dueDate: string;
   status: "open" | "done" | "deleted";
   createdAt: string;
-  doneAt: string;
-  updatedAt: string;
-  deletedAt: string;
+  doneAt: string | null;
+  updatedAt: string | null;
+  deletedAt: string | null;
   userId: number;
 }

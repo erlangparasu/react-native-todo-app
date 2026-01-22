@@ -5,7 +5,9 @@ export class GetTodoListUsecase {
         private todoRepository: TodoRepository,
     ) {}
 
-    async execute(params: { userId: number }) {
+    async execute(params: {
+        userId: number;
+    }) {
         const todos = await this.todoRepository.localGetAll();
 
         const userTodos = todos.filter((rec) => {

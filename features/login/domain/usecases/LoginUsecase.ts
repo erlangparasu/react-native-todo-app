@@ -10,16 +10,19 @@ export class LoginOrRegisterUsecase {
     userName: string;
   }): Promise<UserDTO> {
     const users = await this.userRepository.localGetAll();
+    console.log({ users });
 
-    const user = users.find((record) => {
-      record.name === params.userName;
+    const foundUser = users.find((record) => {
+      return record.name === params.userName;
     }) ?? null;
-    if (user) {
+    if (foundUser) {
       // NOTE: User already exists
+      console.log("user already registered");
 
-      return user;
+      return foundUser;
     } else {
       // NOTE: Create new user
+      console.log("create new user");
 
       const maxId = users.reduce((max, user) => {
         return user.id > max ? user.id : max;

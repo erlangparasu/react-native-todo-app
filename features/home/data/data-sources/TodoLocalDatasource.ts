@@ -67,7 +67,7 @@ export class TodoLocalDatasource {
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
-        record.id !== params.todoItem.id;
+        return record.id !== params.todoItem.id;
       }).map((item) => {
         return { ...item };
       });
@@ -92,7 +92,7 @@ export class TodoLocalDatasource {
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
-        record.id !== params.todoId;
+        return record.id !== params.todoId;
       })
         .map((item) => {
           return { ...item };

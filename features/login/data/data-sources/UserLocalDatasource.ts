@@ -53,7 +53,7 @@ export class UserLocalDatasource {
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
-        record.id !== params.userItem.id;
+        return record.id !== params.userItem.id;
       });
 
       newRecords.push({ ...params.userItem });
@@ -71,7 +71,7 @@ export class UserLocalDatasource {
     try {
       const oldRecords = await this.getList();
       const newRecords = oldRecords.filter((record) => {
-        record.id !== params.userId;
+        return record.id !== params.userId;
       });
 
       await AsyncStorage.setItem("users", JSON.stringify(newRecords));
